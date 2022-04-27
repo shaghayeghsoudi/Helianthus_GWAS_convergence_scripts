@@ -3,6 +3,9 @@
 #### analyzing convergent wondows ####
 #rm(list = ls())
 setwd("/data/users/soudi/paper_sunflowers/null_W")
+#setwd("~/Dropbox/My Mac (Shaghayegh’s MacBook Pro)/Documents/manuscripts_sunflowers/convergence/paper_sunflowers/null_W")
+
+
 
 ### load climate and soil vars Corrected #####
 ## load corrected table
@@ -380,6 +383,27 @@ barplot(counts_pheno,
 
 dev.off()
 #############################################
+
+### corrected GPA-GEA and uncorrected GEA
+counts_cli_f<-counts_cli[c(1:2), ]
+rownames(counts_cli_f)<-c("gea_un","gea_cor")
+
+
+counts_pheno_f<-counts_pheno[c(1:2),]
+
+both<-rbind(counts_cli_f,counts_pheno_f)
+both_f<-both[c(1,2,4),]
+
+pdf (file = "barplots_convergent_windows_allchromstogether_recomadjusted_climate_phenotype_Intersection.pdf",width = 8, height= 10)
+par(mar = c(12,4.8,5.1,4.1))
+barplot(both_f, 
+         col=c("#1B9E77","#D95F02","#7570B3"),
+        beside=TRUE, ylim=c(0,2000),ylab = "number of convergent windows", cex.lab=1.5, cex.axis=1.5,width=c(0.03,0.03,0.03),cex = 0.9,las=3)
+
+dev.off()
+
+
+
 
 
 

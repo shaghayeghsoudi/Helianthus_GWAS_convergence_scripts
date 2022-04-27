@@ -1,7 +1,7 @@
 #### analyzing convergent wondows ####
 rm(list = ls())
 setwd("/data/users/soudi/paper_sunflowers/null_W/inversion_conversion_overlap")
-
+#setwd("inversion_conversion_overlap")
 ### load climate and soil vars Corrected #####
 ## load corrected table
 null_corr<-read.table(file= "convergent_inversion_overlap_merged_P_LD0.9_1cM", header = TRUE)
@@ -216,7 +216,7 @@ aa<-data.frame(category = c(rep("Soil", 15), rep("Climate", 25),rep("Phenotype",
 row.names(aa)<-colnames(all_comparisonnumber)
 
 
-pheatmap(all_comparisonnumber,cluster_cols = F, cluster_rows = F,cex= 1, col=brewer.pal(11,"RdBu"),cellwidth=8,cellheight = 8,fontsize = 7,gaps_col = c(15,40,110),annotation_colors = anno_colors,na_col = "gray70",display_numbers = test_labels_number,number_color = "black",ontsize_number=200)
+pheatmap(all_comparisonnumber,cluster_cols = F, cluster_rows = F,cex= 1, col=brewer.pal(11,"RdBu"),cellwidth=8,cellheight = 8,fontsize = 9.5,gaps_col = c(15,40,110),annotation_colors = anno_colors,na_col = "gray70",display_numbers = test_labels_number,number_color = "black",ontsize_number=200)
 
 dev.off()
 
