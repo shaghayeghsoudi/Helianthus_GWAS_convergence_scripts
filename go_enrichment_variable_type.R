@@ -191,7 +191,8 @@ aa$Term<-gsub("translation release factor activity, cod...","translation release
 for ( in in 1:length(var_types)){
 
   aa_focal<-aa[aa$var_type==var_types[i],]
-  
+  aa_focal<-aa_focal[aa_focal$Significant>=3,]   ## limit to at least three significant genes
+  aa_focal$fold_increase<-(aa_focal$Significant/aa_focal$Expected)  ### calulate the fold increase
   
   our_res2<-NULL
   for (j in 1:length(go_functions)){
@@ -208,13 +209,13 @@ for ( in in 1:length(var_types)){
    
    
    
-   gg<-ggplot(our_res2, aes (x = Term, y = Significant, fill = p.adj))+
+   gg<-ggplot(our_res2, aes (x = Term, y = fold_increase, fill = p.adj))+
    geom_bar(stat="identity")+ scale_fill_gradient(low="blue", high="red") + 
    facet_grid(go_function ~ ., scales = "free_y",space = "free_y")  +
    coord_flip() + theme(panel.background = element_blank(),axis.text=element_text(size=12))+
    labs(y = "Number of significant genes", x = "GO terms") 
 
-   pdf(file = paste("Go_enrichment_picmin_4way_unclustered_ElimFisher_per_variable_type_",var_types[i],".pdf",sep = "" ),height= 12, width = 12)
+   pdf(file = paste("Go_enrichment_picmin_4way_unclustered_ElimFisher_per_variable_type_fold_increase",var_types[i],".pdf",sep = "" ),height= 12, width = 12)
    print(gg)
    dev.off()
 
