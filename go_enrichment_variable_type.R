@@ -106,7 +106,7 @@ all.genes <- sort(unique(as.character(GTOGO$ensembl_gene_id)))
 overlaps_with_xrq<-read.delim(file = "CONV_WIN_GENE_picmin_overlap_HanXRQv2_Ha412HOv2_with_variable_id.table", header = TRUE)
 var_types<-unique(overlaps_with_xrq$V5)
 
-
+ ### run for each variable type and go function
 for (i in 1:length(var_types)){
 overlaps_with_xrq_focal<-overlaps_with_xrq[overlaps_with_xrq$V5%in%var_types[i],]
 int.genes<-unique(overlaps_with_xrq_focal$ensembl_gene_id)
@@ -141,7 +141,7 @@ go_functions<-c("BP","MF","CC")
   #CC<-results.tab[order(results.tab$p.adj),]
   #results.tab$Term <- factor(CC$Term,                                    # Factor 
   #                        levels = CC$Term[order(CC$Significant, decreasing = TRUE)])
-  write.table(results.tab, file =paste("out_res_GOEnrichment_TopGo_convergent_windowos_",var_types[i],"picmin_ElimFisher_",go_functions[j],".table", sep = ""),  quote = FALSE, sep = "\t", row.names = FALSE, col.names =TRUE )
+  write.table(results.tab, file =paste("out_res_GOEnrichment_TopGo_var_types/out_res_GOEnrichment_TopGo_convergent_windowos_",var_types[i],"picmin_ElimFisher_",go_functions[j],".table", sep = ""),  quote = FALSE, sep = "\t", row.names = FALSE, col.names =TRUE )
 
    }
 }
