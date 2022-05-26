@@ -222,3 +222,39 @@ for ( in in 1:length(var_types)){
   }
 
 }
+                
+                
+                
+                
+################################################
+### plot without considering variable type ####
+
+our_res_all_vars<-NULL
+  for (j in 1:length(go_functions)){
+    aa<-aa[!duplicated(aa$GO.ID),]
+    aa_focal_term<-aa[aa$go_function==go_functions[j],]
+    aa_focal_term<-aa_focal_term[aa_focal_term$Significant>=2,]
+    aa_focal_term$fold_increase<-aa_focal_term$Significant/aa_focal_term$Expected
+    aa_focal_term$Go_ID_Term<-paste(aa_focal_term$GO.ID , aa_focal_term$Term , sep = "-")
+    aa_focal_term<-aa_focal_term[aa_focal_term$p.adj <= 0.05,]
+    
+    aa_focal_term<-aa_focal_term[order(aa_focal_term$p.adj),]
+    aa_focal_term$Term <- factor(aa_focal_term$Term,                                    # Factor 
+                  levels = aa_focal_term$Term[order(aa_focal_term$Significant, decreasing = TRUE)])
+   
+   
+    our_res_all_vars<-rbind(aa_focal_term,our_res_all_vars)
+   
+  }
+   
+   gg<-ggplot(our_res_all_vars, aes (x = Go_ID_Term, y = fold_increase, fill = p.adj))+
+   geom_bar(stat="identity")+ scale_fill_gradient(low="blue", high="red") + 
+   facet_grid(go_function ~ ., scales = "free_y",space = "free_y")  +
+   coord_flip() + theme(panel.background = element_blank(),axis.text=element_text(size=10))+
+   labs(y = "Fold Increase", x = "Go ID_Term") 
+
+   pdf(file = "Go_enrichment_picmin_4way_unclustered_ElimFisher_fold_increase.pdf",height= 12, width = 12)
+   print(gg)
+   dev.off()
+
+
