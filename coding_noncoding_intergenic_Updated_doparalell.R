@@ -1,11 +1,16 @@
 #!/usr/bin/env Rscript
 
+
+#### find overlaps between all 5K  windows and coding-noncoding-intergenic regions. Script use parallel mode using "foreach" and "doParalell" packages in R to accelerate the process
+
+## Load required packages
 library(stringr)
 library(GenomicRanges)
 library(foreach)
 library(doParallel)
 
 
+## Laod gff file and adjust required formats
 gff<-read.table(file = "HAN412_Eugene_curated_v1_1.gff3", header= FALSE)[,c(1:5,9)]
 gff_good<-gff[!grepl("Ha412HOChr00",gff$V1),]
 
@@ -37,6 +42,7 @@ gff_non_3utrs$end<-(gff_non_3utrs$end+500)
 gff_CDS<-gff_non[gff_non$position_id=="CDS", ]
 allnoncoding<-rbind(out_res_good_intron,gff_non_5utrs,gff_non_3utrs)
 
+## 5k nonoverlapping windows covering the whole genome
 windows_5k<-read.table(file = "bins_good_5000.txt", header = FALSE)[,c(1:4)]
 #windows_5k<-read.table(file = "bins_good_5000_random10K.txt", header = FALSE)[,c(1:4)]
 colnames(windows_5k)<-c("window_id","chrom","start","end")
