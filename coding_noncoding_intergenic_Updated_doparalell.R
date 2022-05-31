@@ -125,4 +125,56 @@ foreach(j = 1:length(chroms))%dopar%{
 }
 
 
+
 parallel::stopCluster(cl = my.cluster)
+
+
+### part two:
+## find picmin windows are in coding/noncoding-intergenic regions and do chiqsq test
+
+
+## load picmin significant windows
+picmin_unclust<-read.delim(file = "~/Dropbox/input_data/GO_annotaion_analysis/go_enrichment_picmin/picmin_fdr20_results_unclustered_4way_sh.txt", header = FALSE)
+picmin_unclust$V9<-gsub("llevation" ,"Elevation",picmin_unclust$V9 )
+picmin_unclust_selected_cols<-picmin_unclust[,c(5,8,9)]
+picmin_unclust_selected_cols<-picmin_unclust_selected_cols[!duplicated(picmin_unclust_selected_cols$V8),]
+colnames(picmin_unclust_selected_cols)<-c("chrom","window","variable")
+
+### load 5k windows with overlap information
+
+files<-list.files("~/Dropbox/input_data/coding_noncoding_overlap_picmin/overlapps_5Kwindows_with_coding_noncoding_intergenic_regions", pattern = "overlapps_5Kwindows_with_coding_noncoding_intergenic_regions_*" , full.names= TRUE)
+
+windows<-lapply(files, function(x) {
+    read.table(x, header = TRUE, sep = "\t")
+})
+
+aa <- do.call("rbind", windows) 
+
+coding_noncoding_5kwindows<-aa[(aa$coding_noncoding_status == "coding" |  aa$coding_noncoding_status == "noncoding"),]
+
+
+out_res_k<-NULL
+for (k in 1:nrow(coding_noncoding_5kwindows)){
+
+    #for (k in 1:50){
+    focal_window<-coding_noncoding_5kwindows[k,]
+
+    if (focal_window$window_id %in% picmin_unclust_selected_cols$window){
+
+        focal_window$picmin_status<-"picmin_window"
+    } else {
+
+        focal_window$picmin_status<-"Not_picmin_window"
+    }
+
+    out_res_k<-rbind(focal_window,out_res_k)
+}
+
+
+write.table(out_res_k, "5k_windows_with_coding_noncoding_status_checked_picmin_or_notpicmin.table", col.names = TRUE, row.names = FALSE, sep = "\t", quote = FALSE)
+
+### perform chisq.test 
+table(out_res_k$coding_noncoding_status, out_res_k$picmin_status)
+chisq.test(out_res_k$coding_noncoding_status, out_res_k$picmin_status,simulate.p.value = TRUE)
+
+
