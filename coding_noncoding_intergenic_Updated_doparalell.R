@@ -175,6 +175,8 @@ write.table(out_res_k, "5k_windows_with_coding_noncoding_status_checked_picmin_o
 
 ### perform chisq.test 
 table(out_res_k$coding_noncoding_status, out_res_k$picmin_status)
-chisq.test(out_res_k$coding_noncoding_status, out_res_k$picmin_status,simulate.p.value = TRUE)
 
+chitest<-data.frame(chisq.test(out_res_k$coding_noncoding_status, out_res_k$picmin_status,simulate.p.value = TRUE)[c("statistic","parameter","p.value")])
+
+write.table(chitest, "out_resk_chisq.test_5k_windows_with_coding_noncoding_status_association_with_picmin_or_notpicmin.table", col.names = TRUE, row.names = FALSE, sep = "\t", quote = FALSE)
 
